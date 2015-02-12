@@ -21,26 +21,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
+
+Mais informacoes (More info):
+https://github.com/diogogc/LabDuino
+diogo.guimaraes.carvalho@gmail.com
+
 */
 
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 /*
-define portas digitais conectadas aos conectores de fone (d1 ao d4)
-define digital ports wired to phone jacks (d1 to d4)
+define portas digitais conectadas aos conectores de fone d1 ao d4
+define digital ports wired to phone jacks d1 to d4
 */
-#define d1 = 2;
-#define d2 = 3;
-#define d3 = 4;
-#define d5 = 5;
+#define D1 2
+#define D2 3
+#define D3 4
+#define D4 5
 /*
-define portas analogicas conectadas aos conectores de fone (s1 ao s4) 
-define analog ports wired to phone jacks (s1 to s4)  
+define portas analogicas conectadas aos conectores de fone (s1 ao s4)
+define analog ports wired to phone jacks (s1 to s4)
 */
-#define s1 = A0;
-#define s2 = A1;
-#define s3 = A2;
-#define s4 = A3;
+#define S1 A0
+#define S2 A1
+#define S3 A2
+#define S4 A3
+
 
 LiquidCrystal_I2C lcd(0x20, 16, 2); // set the LCD address to 0x20 for a 16 chars and 2 line display
 int screenWidth = 16;
@@ -158,6 +164,11 @@ int pegaInputBotao()
     Para teste de checagem dos inputs i2c, comente daqui...
     For i2c input check comment from here...
   */
+
+  /*
+    Para chegar a estes valores, realizei o teste de input
+    To get this values, i've run input check
+  */
   if (x == 241) {
     return 1;  // para Baixo Down
   }
@@ -239,12 +250,24 @@ void getEnterPress()
     //Go to experiments
     else
     {
-
+      if (emExpFis)
+      {
+        switch (currentSelection)
+        {
+          case 0:
+            {
+              velociadeMedia();
+              break;
+            }
+          default:
+            break;
+        }
+      }
     }
   }
   else if (pegaInputBotao() == 4)
   {
-    if (onSubOption)
+    if (onSubOption && (!emExpFis || !emExpQuim || !emExpBio || !emExpMat))
     {
       onSubOption = false;
       currentSelection = optionSelected;
@@ -263,6 +286,8 @@ void setSelection()
   lcd.write((uint8_t)1);
   switch (currentSelection) {
     case 0: {
+        // Escreve a logo Home
+        //prints home Logo
         lcd.setCursor(0, 0);
         lcd.write((uint8_t)0);
         lcd.setCursor(2, 0);
@@ -320,12 +345,12 @@ void setSubSelection()
     Add here the suboptions
     Neste caso:
     On this case:
-    
+
     optionSelected = 0 <-- Fisica (Physic)
     optionSelected = 1 <-- Quimica (Chemestry)
     optionSelected = 2 <-- Biologia (Biology)
     optionSelected = 3 <-- Math (Math)
-    
+
     Note que e a mesma ordem das mainOptions;
     Sinta-se livre para muda-lo para suas nescecidades
     Note that it follows mainOption order;
@@ -401,6 +426,136 @@ void setSubSelection()
   delay(200);
 }
 
+/*
+Metodos dos experimentos aqui
+Experiments methods here
+*/
+
+void velociadeMedia()
+{
+  /*
+  setar portas utilizadas
+  set used ports
+  */
+  pinMode(D1, INPUT); //Sensor IR
+  pinMode(D3, INPUT); //Sensor IR
+  pinMode(D2, OUTPUT); //Emissor IR (Emiter)
+  pinMode(D4, OUTPUT); //Emissor IR (Emiter)
+
+  /*
+    Parametros
+    Parameters
+  */
+
+  float start, finish, elapsed, elapsedInSec;
+  float velMed;
+  float distancia ;
+
+  boolean pegouDistancia = false;
+  boolean started = false;
+  boolean finished = false;
+  lcd.clear();
+  while (true)
+  {
+    if (!pegouDistancia)
+    {
+      lcd.setCursor(0, 0);
+      lcd.print("Distancia (em M)");
+      lcd.setCursor(0, 1);
+      lcd.print(distancia);
+
+      if (distancia > 0.1)
+      {
+        if (pegaInputBotao() == 1)
+        {
+          distancia = distancia - 0.1;
+        }
+        else if (pegaInputBotao() == 2)
+        {
+          distancia = distancia + 0.1;
+        }
+        else if (pegaInputBotao() == 3)
+        {
+          pegouDistancia = true;
+          lcd.clear();
+        }
+      }
+      else
+      {
+        if (pegaInputBotao() == 2)
+        {
+          distancia = distancia + 0.1;
+        }
+      }
+    }
+    else
+    {
+      if((digitalRead(D2)!=HIGH) && (digitalRead(D4)!=HIGH))
+      {
+        digitalWrite(D2,HIGH);
+        digitalWrite(D4,HIGH);
+      }
+      if (!started && !finished) {
+        lcd.setCursor(0, 0);
+        lcd.print("esperando carro");
+        lcd.setCursor(0, 1);
+        lcd.print("passar P inicial");
+        if(digitalRead(D1)==HIGH)
+        {
+          started = true;
+          start=millis();
+          lcd.clear();
+        }
+      }
+      else
+      {
+        if (started && !finished) {
+          lcd.setCursor(0, 0);
+          lcd.print("Iniciou!");
+          lcd.setCursor(0, 1);
+          lcd.print("Tempo:");
+          lcd.print((millis() - start)*0.001);
+          
+          if(digitalRead(D3)==LOW)
+          {
+            finished = true;
+            finish=millis();
+            lcd.clear();
+          }
+        }
+        else if(started && finished)
+        {
+          elapsed=finish-start;
+          elapsedInSec = elapsed *0.001;
+          velMed = distancia / elapsedInSec;
+          lcd.setCursor(0, 0);
+          lcd.print("Terminou ");
+          lcd.print("T:");
+          lcd.print(elapsedInSec);
+          lcd.print("s");
+          lcd.setCursor(0, 1);
+          lcd.print("Vel :");
+          lcd.print(velMed);
+          lcd.print(" m/s");
+        }
+        
+      }
+    }
+    if (pegaInputBotao() == 4)
+    {
+      if (pegouDistancia)
+      {
+        pegouDistancia = false;
+      }
+      else {
+        break;
+      }
+    }
+    delay(100);
+  }
+  lcd.clear();
+}
+
 void setup()
 {
   /*
@@ -421,6 +576,8 @@ void setup()
   //Startup Lettering
   lcd.setCursor(4, 0);
   lcd.print("LabDuino");
+
+
   delay(2000);
   lcd.clear();
 }
