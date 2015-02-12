@@ -259,6 +259,11 @@ void getEnterPress()
               velociadeMedia();
               break;
             }
+            case 1:
+            {
+              velocidadeInst();
+              break;
+            }
           default:
             break;
         }
@@ -460,17 +465,17 @@ void velociadeMedia()
     if (!pegouDistancia)
     {
       lcd.setCursor(0, 0);
-      lcd.print("Distancia (em M)");
+      lcd.print("qual dist em M?");
       lcd.setCursor(0, 1);
       lcd.print(distancia);
 
       if (distancia > 0.1)
       {
-        if (pegaInputBotao() == 1)
+        if (pegaInputBotao() == 2)
         {
           distancia = distancia - 0.1;
         }
-        else if (pegaInputBotao() == 2)
+        else if (pegaInputBotao() == 1)
         {
           distancia = distancia + 0.1;
         }
@@ -482,7 +487,7 @@ void velociadeMedia()
       }
       else
       {
-        if (pegaInputBotao() == 2)
+        if (pegaInputBotao() == 1)
         {
           distancia = distancia + 0.1;
         }
@@ -538,7 +543,7 @@ void velociadeMedia()
           lcd.print(velMed);
           lcd.print(" m/s");
         }
-        
+
       }
     }
     if (pegaInputBotao() == 4)
@@ -546,6 +551,131 @@ void velociadeMedia()
       if (pegouDistancia)
       {
         pegouDistancia = false;
+      }
+      else {
+        break;
+      }
+    }
+    delay(100);
+  }
+  lcd.clear();
+}
+
+void velocidadeInst()
+{
+  /*
+  setar portas utilizadas
+  set used ports
+  */
+  pinMode(D1, INPUT); //Sensor IR
+  pinMode(D2, OUTPUT); //Emissor IR (Emiter)
+  
+
+  /*
+    Parametros
+    Parameters
+  */
+
+  float start, finish, elapsed, elapsedInSec;
+  float velInst;
+  float tamanhoCarro ;
+
+  boolean pegouTamanho = false;
+  boolean started = false;
+  boolean finished = false;
+  lcd.clear();
+  while (true)
+  {
+    if (!pegouTamanho)
+    {
+      lcd.setCursor(0, 0);
+      lcd.print("Qual o tamanho");
+      lcd.setCursor(0, 1);
+      lcd.print("do carro? ");
+      lcd.print(tamanhoCarro);
+      lcd.print(" m");
+
+      if (tamanhoCarro > 0.01)
+      {
+        if (pegaInputBotao() == 2)
+        {
+          tamanhoCarro = tamanhoCarro - 0.01;
+        }
+        else if (pegaInputBotao() == 1)
+        {
+          tamanhoCarro = tamanhoCarro + 0.01;
+        }
+        else if (pegaInputBotao() == 3)
+        {
+          pegouTamanho = true;
+          lcd.clear();
+        }
+      }
+      else
+      {
+        if (pegaInputBotao() == 1)
+        {
+          tamanhoCarro = tamanhoCarro + 0.1;
+        }
+      }
+    }
+    else
+    {
+      if((digitalRead(D2)!=HIGH))
+      {
+        digitalWrite(D2,HIGH);
+      }
+      if (!started && !finished) {
+        lcd.setCursor(0, 0);
+        lcd.print("esperando carro");
+        lcd.setCursor(0, 1);
+        lcd.print("passar P inicial");
+        if(digitalRead(D1)==HIGH)
+        {
+          started = true;
+          start=millis();
+          lcd.clear();
+        }
+      }
+      else
+      {
+        if (started && !finished) {
+          lcd.setCursor(0, 0);
+          lcd.print("Iniciou!");
+          lcd.setCursor(0, 1);
+          lcd.print("Tempo:");
+          lcd.print((millis() - start)*0.001);
+          
+          if(digitalRead(D1)==LOW)
+          {
+            finished = true;
+            finish=millis();
+            lcd.clear();
+          }
+        }
+        else if(started && finished)
+        {
+          elapsed=finish-start;
+          elapsedInSec = elapsed *0.001;
+          velInst = tamanhoCarro / elapsedInSec;
+          lcd.setCursor(0, 0);
+          lcd.print("Terminou ");
+          lcd.print("T:");
+          lcd.print(elapsedInSec);
+          lcd.print("s");
+          lcd.setCursor(0, 1);
+          lcd.print("Vel Inst:");
+          lcd.print(velInst);
+          lcd.print(" m/s");
+        }
+
+      }
+    }
+    if (pegaInputBotao() == 4)
+    {
+      if (pegouTamanho)
+      {
+        pegouTamanho = false;
       }
       else {
         break;
