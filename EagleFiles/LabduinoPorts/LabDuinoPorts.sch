@@ -221,6 +221,14 @@ In this library the device names are the same as the pin names of the symbols, t
 <part name="P+9" library="supply1" deviceset="VCC" device=""/>
 <part name="V-" library="wirepad" deviceset="2,54/0,9" device=""/>
 <part name="SUPPLY5" library="supply2" deviceset="GND" device=""/>
+<part name="S1-IN" library="wirepad" deviceset="2,54/0,9" device=""/>
+<part name="S2-IN" library="wirepad" deviceset="2,54/0,9" device=""/>
+<part name="S3-IN" library="wirepad" deviceset="2,54/0,9" device=""/>
+<part name="S4-IN" library="wirepad" deviceset="2,54/0,9" device=""/>
+<part name="D1-IN" library="wirepad" deviceset="2,54/0,9" device=""/>
+<part name="D2-IN" library="wirepad" deviceset="2,54/0,9" device=""/>
+<part name="D3-IN" library="wirepad" deviceset="2,54/0,9" device=""/>
+<part name="D4-IN" library="wirepad" deviceset="2,54/0,9" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -263,6 +271,14 @@ In this library the device names are the same as the pin names of the symbols, t
 <instance part="P+9" gate="VCC" x="66.04" y="20.32" rot="R180"/>
 <instance part="V-" gate="1" x="-5.08" y="30.48" rot="R270"/>
 <instance part="SUPPLY5" gate="GND" x="-5.08" y="25.4"/>
+<instance part="S1-IN" gate="1" x="20.32" y="35.56" rot="R90"/>
+<instance part="S2-IN" gate="1" x="40.64" y="33.02" rot="R90"/>
+<instance part="S3-IN" gate="1" x="55.88" y="33.02" rot="R90"/>
+<instance part="S4-IN" gate="1" x="83.82" y="33.02" rot="R90"/>
+<instance part="D1-IN" gate="1" x="12.7" y="20.32" rot="R90"/>
+<instance part="D2-IN" gate="1" x="27.94" y="20.32" rot="R90"/>
+<instance part="D3-IN" gate="1" x="43.18" y="20.32" rot="R90"/>
+<instance part="D4-IN" gate="1" x="60.96" y="20.32" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -325,6 +341,54 @@ In this library the device names are the same as the pin names of the symbols, t
 <segment>
 <pinref part="V-" gate="1" pin="P"/>
 <pinref part="SUPPLY5" gate="GND" pin="GND"/>
+</segment>
+</net>
+<net name="N$1" class="0">
+<segment>
+<pinref part="S1" gate="1" pin="P"/>
+<pinref part="S1-IN" gate="1" pin="P"/>
+</segment>
+</net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="S2" gate="1" pin="P"/>
+<pinref part="S2-IN" gate="1" pin="P"/>
+</segment>
+</net>
+<net name="N$3" class="0">
+<segment>
+<pinref part="S3" gate="1" pin="P"/>
+<pinref part="S3-IN" gate="1" pin="P"/>
+</segment>
+</net>
+<net name="N$4" class="0">
+<segment>
+<pinref part="S4" gate="1" pin="P"/>
+<pinref part="S4-IN" gate="1" pin="P"/>
+</segment>
+</net>
+<net name="N$5" class="0">
+<segment>
+<pinref part="D1" gate="1" pin="P"/>
+<pinref part="D1-IN" gate="1" pin="P"/>
+</segment>
+</net>
+<net name="N$6" class="0">
+<segment>
+<pinref part="D2" gate="1" pin="P"/>
+<pinref part="D2-IN" gate="1" pin="P"/>
+</segment>
+</net>
+<net name="N$7" class="0">
+<segment>
+<pinref part="D3" gate="1" pin="P"/>
+<pinref part="D3-IN" gate="1" pin="P"/>
+</segment>
+</net>
+<net name="N$8" class="0">
+<segment>
+<pinref part="D4" gate="1" pin="P"/>
+<pinref part="D4-IN" gate="1" pin="P"/>
 </segment>
 </net>
 </nets>
