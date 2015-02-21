@@ -12,7 +12,7 @@ Main Components:
 
 Voltage Regulator:
 
-I actually followed this instructables for that: Portable 5V Regulator
+I actually followed this instructables for that: <http://www.instructables.com/id/Portable-5V-Regulator/>
 
 I just changed the 78L05 with L7805CV, because i already had a few of them around.
 
