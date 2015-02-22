@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.0625" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.0625" altunitdist="inch" altunit="inch"/>
+<grid distance="0.5" unitdist="mm" unit="mm" style="lines" multiple="1" display="no" altdistance="0.5" altunitdist="mm" altunit="mm"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
@@ -126,10 +126,10 @@
 </layers>
 <board>
 <plain>
-<wire x1="0" y1="0" x2="78.41" y2="0" width="0" layer="20"/>
-<wire x1="78.41" y1="0" x2="78.41" y2="15.865" width="0" layer="20"/>
-<wire x1="78.41" y1="15.865" x2="0" y2="15.865" width="0" layer="20"/>
-<wire x1="0" y1="15.865" x2="0" y2="0" width="0" layer="20"/>
+<wire x1="0" y1="0" x2="80" y2="0" width="0" layer="20"/>
+<wire x1="80" y1="0" x2="80" y2="15" width="0" layer="20"/>
+<wire x1="80" y1="15" x2="0" y2="15" width="0" layer="20"/>
+<wire x1="0" y1="15" x2="0" y2="0" width="0" layer="20"/>
 </plain>
 <libraries>
 <library name="SparkFun-Retired">
@@ -198,14 +198,14 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <variantdefs>
 </variantdefs>
 <classes>
-<class number="0" name="default" width="0" drill="0.508">
+<class number="0" name="default" width="0.381" drill="0.508">
 <clearance class="0" value="2"/>
 </class>
 </classes>
 <designrules name="default">
 <description language="de">&lt;b&gt;EAGLE Design Rules&lt;/b&gt;
 &lt;p&gt;
-Die Standard-Design-Rules sind so gewÃ¤hlt, dass sie fÃ¼r 
+Die Standard-Design-Rules sind so gewählt, dass sie für 
 die meisten Anwendungen passen. Sollte ihre Platine 
 besondere Anforderungen haben, treffen Sie die erforderlichen
 Einstellungen hier und speichern die Design Rules unter 
@@ -287,7 +287,7 @@ design rules under a new name.</description>
 </designrules>
 <autorouter>
 <pass name="Default">
-<param name="RoutingGrid" value="12.5mil"/>
+<param name="RoutingGrid" value="50mil"/>
 <param name="AutoGrid" value="1"/>
 <param name="Efforts" value="0"/>
 <param name="TopRouterVariant" value="1"/>
@@ -307,7 +307,7 @@ design rules under a new name.</description>
 <param name="PrefDir.13" value="0"/>
 <param name="PrefDir.14" value="0"/>
 <param name="PrefDir.15" value="0"/>
-<param name="PrefDir.16" value="-"/>
+<param name="PrefDir.16" value="a"/>
 <param name="cfVia" value="8"/>
 <param name="cfNonPref" value="5"/>
 <param name="cfChangeDir" value="2"/>
@@ -382,15 +382,15 @@ design rules under a new name.</description>
 </pass>
 </autorouter>
 <elements>
-<element name="BT1" library="SparkFun-Retired" package="TACTILE-PTH" value="" x="4.445" y="6.35" rot="R270"/>
-<element name="BT2" library="SparkFun-Retired" package="TACTILE-PTH" value="" x="22.86" y="6.0325" rot="R270"/>
-<element name="BT3" library="SparkFun-Retired" package="TACTILE-PTH" value="" x="60.325" y="6.6675" rot="R270"/>
-<element name="BT4" library="SparkFun-Retired" package="TACTILE-PTH" value="" x="74.6125" y="6.0325" rot="R270"/>
-<element name="PAD1" library="wirepad" package="1,6/0,9" value="" x="4.445" y="12.3825"/>
-<element name="PAD2" library="wirepad" package="1,6/0,9" value="" x="23.495" y="12.3825"/>
-<element name="PAD3" library="wirepad" package="1,6/0,9" value="" x="60.0075" y="12.3825"/>
-<element name="PAD4" library="wirepad" package="1,6/0,9" value="" x="74.295" y="13.0175"/>
-<element name="VCC" library="wirepad" package="1,6/0,9" value="" x="40.64" y="9.8425"/>
+<element name="BT1" library="SparkFun-Retired" package="TACTILE-PTH" value="" x="5.31" y="6.78" rot="R270"/>
+<element name="BT2" library="SparkFun-Retired" package="TACTILE-PTH" value="" x="22.31" y="6.67" rot="R270"/>
+<element name="BT3" library="SparkFun-Retired" package="TACTILE-PTH" value="" x="58.2" y="6.28" rot="R270"/>
+<element name="BT4" library="SparkFun-Retired" package="TACTILE-PTH" value="" x="75.7" y="6.17" rot="R270"/>
+<element name="PAD1" library="wirepad" package="1,6/0,9" value="" x="5.22" y="12.82"/>
+<element name="PAD2" library="wirepad" package="1,6/0,9" value="" x="22.37" y="12.82"/>
+<element name="PAD3" library="wirepad" package="1,6/0,9" value="" x="58.52" y="12.82"/>
+<element name="PAD4" library="wirepad" package="1,6/0,9" value="" x="75.72" y="12.63"/>
+<element name="VCC" library="wirepad" package="1,6/0,9" value="" x="41.14" y="1.63"/>
 </elements>
 <signals>
 <signal name="VCC">
@@ -399,48 +399,57 @@ design rules under a new name.</description>
 <contactref element="BT3" pad="1"/>
 <contactref element="BT4" pad="1"/>
 <contactref element="VCC" pad="1"/>
-<wire x1="73.66" y1="6.0325" x2="76.835" y2="9.2075" width="0.254" layer="16"/>
-<wire x1="66.675" y1="6.0325" x2="73.66" y2="6.0325" width="0.254" layer="16"/>
-<wire x1="62.865" y1="9.8425" x2="66.675" y2="6.0325" width="0.254" layer="16"/>
-<wire x1="76.835" y1="9.2075" x2="76.8731" y2="9.2837" width="0.254" layer="16"/>
-<wire x1="62.865" y1="9.8425" x2="62.5856" y2="9.9187" width="0.254" layer="16"/>
-<wire x1="40.3225" y1="9.525" x2="40.64" y2="9.8425" width="0.254" layer="16"/>
-<wire x1="25.4" y1="9.525" x2="40.3225" y2="9.525" width="0.254" layer="16"/>
-<wire x1="25.4" y1="9.525" x2="25.1206" y2="9.2837" width="0.254" layer="16"/>
-<wire x1="10.4775" y1="6.0325" x2="6.985" y2="9.525" width="0.254" layer="16"/>
-<wire x1="21.9075" y1="6.0325" x2="10.4775" y2="6.0325" width="0.254" layer="16"/>
-<wire x1="25.0825" y1="9.2075" x2="21.9075" y2="6.0325" width="0.254" layer="16"/>
-<wire x1="6.985" y1="9.525" x2="6.7056" y2="9.6012" width="0.254" layer="16"/>
-<wire x1="25.0825" y1="9.2075" x2="25.1206" y2="9.2837" width="0.254" layer="16"/>
-<wire x1="59.3725" y1="6.6675" x2="62.5475" y2="9.8425" width="0.254" layer="16"/>
-<wire x1="43.815" y1="6.6675" x2="59.3725" y2="6.6675" width="0.254" layer="16"/>
-<wire x1="40.64" y1="9.8425" x2="43.815" y2="6.6675" width="0.254" layer="16"/>
-<wire x1="62.5475" y1="9.8425" x2="62.5856" y2="9.9187" width="0.254" layer="16"/>
+<wire x1="74.75" y1="6.25" x2="77.75" y2="9.25" width="0.381" layer="16"/>
+<wire x1="63.75" y1="6.25" x2="74.75" y2="6.25" width="0.381" layer="16"/>
+<wire x1="60.5" y1="9.5" x2="63.75" y2="6.25" width="0.381" layer="16"/>
+<wire x1="77.75" y1="9.25" x2="77.9606" y2="9.4212" width="0.381" layer="16"/>
+<wire x1="60.5" y1="9.5" x2="60.4606" y2="9.5312" width="0.381" layer="16"/>
+<wire x1="33" y1="9.75" x2="36.625" y2="6.125" width="0.381" layer="16"/>
+<wire x1="36.625" y1="6.125" x2="41" y2="1.75" width="0.381" layer="16"/>
+<wire x1="24.75" y1="9.75" x2="33" y2="9.75" width="0.381" layer="16"/>
+<wire x1="41" y1="1.75" x2="41.14" y2="1.63" width="0.381" layer="16"/>
+<wire x1="24.75" y1="9.75" x2="24.5706" y2="9.9212" width="0.381" layer="16"/>
+<wire x1="11" y1="6.75" x2="7.75" y2="10" width="0.381" layer="16"/>
+<wire x1="21.5" y1="6.75" x2="11" y2="6.75" width="0.381" layer="16"/>
+<wire x1="24.5" y1="9.75" x2="21.5" y2="6.75" width="0.381" layer="16"/>
+<wire x1="7.75" y1="10" x2="7.5706" y2="10.0312" width="0.381" layer="16"/>
+<wire x1="24.5" y1="9.75" x2="24.5706" y2="9.9212" width="0.381" layer="16"/>
+<wire x1="57.5" y1="6.25" x2="60.5" y2="9.25" width="0.381" layer="16"/>
+<wire x1="36.75" y1="6.25" x2="57.5" y2="6.25" width="0.381" layer="16"/>
+<wire x1="60.5" y1="9.25" x2="60.4606" y2="9.5312" width="0.381" layer="16"/>
+<wire x1="36.75" y1="6.25" x2="36.625" y2="6.125" width="0.381" layer="16"/>
 </signal>
 <signal name="N$1">
 <contactref element="BT1" pad="3"/>
 <contactref element="PAD1" pad="1"/>
-<wire x1="1.905" y1="9.8425" x2="4.445" y2="12.3825" width="0.254" layer="16"/>
-<wire x1="1.905" y1="9.8425" x2="2.1844" y2="9.6012" width="0.254" layer="16"/>
+<wire x1="5" y1="12" x2="5" y2="12.75" width="0.381" layer="16"/>
+<wire x1="3.25" y1="10.25" x2="5" y2="12" width="0.381" layer="16"/>
+<wire x1="5" y1="12.75" x2="5.22" y2="12.82" width="0.381" layer="16"/>
+<wire x1="3.25" y1="10.25" x2="3.0494" y2="10.0312" width="0.381" layer="16"/>
 </signal>
 <signal name="N$2">
 <contactref element="BT2" pad="3"/>
 <contactref element="PAD2" pad="1"/>
-<wire x1="20.6375" y1="9.525" x2="23.495" y2="12.3825" width="0.254" layer="16"/>
-<wire x1="20.6375" y1="9.525" x2="20.5994" y2="9.2837" width="0.254" layer="16"/>
+<wire x1="22.25" y1="12.25" x2="22.25" y2="12.75" width="0.381" layer="16"/>
+<wire x1="20" y1="10" x2="22.25" y2="12.25" width="0.381" layer="16"/>
+<wire x1="22.25" y1="12.75" x2="22.37" y2="12.82" width="0.381" layer="16"/>
+<wire x1="20" y1="10" x2="20.0494" y2="9.9212" width="0.381" layer="16"/>
 </signal>
 <signal name="N$3">
 <contactref element="BT3" pad="3"/>
 <contactref element="PAD3" pad="1"/>
-<wire x1="57.785" y1="10.16" x2="60.0075" y2="12.3825" width="0.254" layer="16"/>
-<wire x1="57.785" y1="10.16" x2="58.0644" y2="9.9187" width="0.254" layer="16"/>
+<wire x1="56" y1="10.25" x2="58.5" y2="12.75" width="0.381" layer="16"/>
+<wire x1="56" y1="9.75" x2="56" y2="10.25" width="0.381" layer="16"/>
+<wire x1="58.5" y1="12.75" x2="58.52" y2="12.82" width="0.381" layer="16"/>
+<wire x1="56" y1="9.75" x2="55.9394" y2="9.5312" width="0.381" layer="16"/>
 </signal>
 <signal name="N$4">
 <contactref element="BT4" pad="3"/>
 <contactref element="PAD4" pad="1"/>
-<wire x1="72.39" y1="11.1125" x2="74.295" y2="13.0175" width="0.254" layer="16"/>
-<wire x1="72.39" y1="9.525" x2="72.39" y2="11.1125" width="0.254" layer="16"/>
-<wire x1="72.39" y1="9.525" x2="72.3519" y2="9.2837" width="0.254" layer="16"/>
+<wire x1="75.5" y1="11.5" x2="75.5" y2="12.5" width="0.381" layer="16"/>
+<wire x1="73.5" y1="9.5" x2="75.5" y2="11.5" width="0.381" layer="16"/>
+<wire x1="75.5" y1="12.5" x2="75.72" y2="12.63" width="0.381" layer="16"/>
+<wire x1="73.5" y1="9.5" x2="73.4394" y2="9.4212" width="0.381" layer="16"/>
 </signal>
 </signals>
 </board>
