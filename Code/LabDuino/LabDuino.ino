@@ -30,6 +30,15 @@ diogo.guimaraes.carvalho@gmail.com
 
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#include <SdFat.h>
+#include <SPI.h>
+#include <AcceleroMMA7361.h>
+
+AcceleroMMA7361 accelero;
+SdFat sdCard;
+SdFile meuArquivo;
+boolean temSd = false;
+
 /*
 define portas digitais conectadas aos conectores de fone d1 ao d4
 define digital ports wired to phone jacks d1 to d4
@@ -49,8 +58,7 @@ define analog ports wired to phone jacks (s1 to s4)
 
 
 LiquidCrystal_I2C lcd(0x20, 16, 2); // set the LCD address to 0x20 for a 16 chars and 2 line display
-int screenWidth = 16;
-int screenHeight = 2;
+
 /*
   InputBotoes
   Buttons Input
@@ -83,39 +91,6 @@ byte homeLogo[8] = {
   0b10101,
   0b10101
 };
-// start Logo
-byte inicioLogo[8] = {
-  0b11111,
-  0b00000,
-  0b01110,
-  0b00100,
-  0b00100,
-  0b01110,
-  0b00000,
-  0b11111
-};
-// End Logo
-byte fimLogo[8] = {
-  0b11111,
-  0b00000,
-  0b01110,
-  0b01000,
-  0b01100,
-  0b01000,
-  0b01000,
-  0b11111
-};
-// Capacitor Logo
-byte capacitorLogo[8] = {
-  0b11111,
-  0b00000,
-  0b01010,
-  0b11011,
-  0b11011,
-  0b01010,
-  0b00000,
-  0b11111
-};
 
 // Control flags to check when is on main option or sub options or on experiment
 boolean onSubOption = false;
@@ -136,9 +111,10 @@ String mainOption4 = "Matematica";// Math
 String mainOptions[4] = {mainOption1, mainOption2, mainOption3, mainOption4};
 
 // Physics SubOptions
+String optionFisica = "Queda Livre";
 String optionFisica1 = "Vel. Med.";
 String optionFisica2 = "Vel. Inst.";
-String subOptionFisica[2] = {optionFisica1, optionFisica2};
+String subOptionFisica[3] = {optionFisica, optionFisica1, optionFisica2};
 
 // TODO: Add Here all other SubOtions
 // TODO: adicione aqui todas as outras subopicoes
@@ -256,14 +232,19 @@ void getEnterPress()
         {
           case 0:
             {
-              velociadeMedia();
+              quedaLivre();
               break;
             }
             case 1:
             {
-              velocidadeInst();
+              velociadeMedia();
               break;
             }
+//            case 2:
+//            {
+//              velocidadeInst();
+//              break;
+//            }
           default:
             break;
         }
@@ -561,53 +542,217 @@ void velociadeMedia()
   lcd.clear();
 }
 
-void velocidadeInst()
-{
-  /*
-  setar portas utilizadas
-  set used ports
-  */
-  pinMode(D1, INPUT); //Sensor IR
-  pinMode(D2, OUTPUT); //Emissor IR (Emiter)
-  
+//void velocidadeInst()
+//{
+//  /*
+//  setar portas utilizadas
+//  set used ports
+//  */
+//  pinMode(D1, INPUT); //Sensor IR
+//  pinMode(D2, OUTPUT); //Emissor IR (Emiter)
+//  
+//
+//  /*
+//    Parametros
+//    Parameters
+//  */
+//
+//  float start, finish, elapsed, elapsedInSec;
+//  float velInst;
+//  float tamanhoCarro ;
+//
+//  boolean pegouTamanho = false;
+//  boolean started = false;
+//  boolean finished = false;
+//  lcd.clear();
+//  while (true)
+//  {
+//    if (!pegouTamanho)
+//    {
+//      lcd.setCursor(0, 0);
+//      lcd.print("Qual o tamanho");
+//      lcd.setCursor(0, 1);
+//      lcd.print("do carro? ");
+//      lcd.print(tamanhoCarro);
+//      lcd.print(" m");
+//
+//      if (tamanhoCarro > 0.01)
+//      {
+//        if (pegaInputBotao() == 2)
+//        {
+//          tamanhoCarro = tamanhoCarro - 0.01;
+//        }
+//        else if (pegaInputBotao() == 1)
+//        {
+//          tamanhoCarro = tamanhoCarro + 0.01;
+//        }
+//        else if (pegaInputBotao() == 3)
+//        {
+//          pegouTamanho = true;
+//          lcd.clear();
+//        }
+//      }
+//      else
+//      {
+//        if (pegaInputBotao() == 1)
+//        {
+//          tamanhoCarro = tamanhoCarro + 0.1;
+//        }
+//      }
+//    }
+//    else
+//    {
+//      if((digitalRead(D2)!=HIGH))
+//      {
+//        digitalWrite(D2,HIGH);
+//      }
+//      if (!started && !finished) {
+//        lcd.setCursor(0, 0);
+//        lcd.print("esperando carro");
+//        lcd.setCursor(0, 1);
+//        lcd.print("passar P inicial");
+//        if(digitalRead(D1)==HIGH)
+//        {
+//          started = true;
+//          start=millis();
+//          lcd.clear();
+//        }
+//      }
+//      else
+//      {
+//        if (started && !finished) {
+//          lcd.setCursor(0, 0);
+//          lcd.print("Iniciou!");
+//          lcd.setCursor(0, 1);
+//          lcd.print("Tempo:");
+//          lcd.print((millis() - start)*0.001);
+//          
+//          if(digitalRead(D1)==LOW)
+//          {
+//            finished = true;
+//            finish=millis();
+//            lcd.clear();
+//          }
+//        }
+//        else if(started && finished)
+//        {
+//          elapsed=finish-start;
+//          elapsedInSec = elapsed *0.001;
+//          velInst = tamanhoCarro / elapsedInSec;
+//          lcd.setCursor(0, 0);
+//          lcd.print("Terminou ");
+//          lcd.print("T:");
+//          lcd.print(elapsedInSec);
+//          lcd.print("s");
+//          lcd.setCursor(0, 1);
+//          lcd.print("Vel Inst:");
+//          lcd.print(velInst);
+//          lcd.print(" m/s");
+//        }
+//
+//      }
+//    }
+//    if (pegaInputBotao() == 4)
+//    {
+//      if (pegouTamanho)
+//      {
+//        pegouTamanho = false;
+//      }
+//      else {
+//        break;
+//      }
+//    }
+//    delay(100);
+//  }
+//  lcd.clear();
+//}
 
-  /*
-    Parametros
-    Parameters
-  */
+void setupAccelero()
+{
+  lcd.clear();
+     lcd.setCursor(0, 0);
+      lcd.print("Calibrando Acel");
+  accelero.begin(D4, D3, D2, D1, S1, S2, S3);
+  accelero.setARefVoltage(5);  //sets the AREF voltage to 3.3V
+  accelero.setSensitivity(LOW);  //sets the sensitivity to +/-6G
+  accelero.calibrate();  
+  
+}
+
+void setupSdCard(int chipSelect)
+{
+  lcd.clear();
+     lcd.setCursor(0, 0);
+      lcd.print("Verificando SD");
+  if(!sdCard.begin(chipSelect,SPI_HALF_SPEED))
+  {
+    lcd.clear();
+     lcd.setCursor(0, 0);
+      lcd.print("Sem SD");
+      delay(2000);
+    
+  }
+  // Abre o arquivo GDATA.TXT!
+  if (!meuArquivo.open("gdata.txt", O_RDWR | O_CREAT | O_AT_END))
+  {
+    lcd.clear();
+     lcd.setCursor(0, 0);
+      lcd.print("Erro I/O SD");
+      delay(2000);
+  }
+  else
+  {
+    temSd = true;
+  }
+  
+}
+
+void quedaLivre()
+{
+  
+  int x;
+  int y;
+  int z;
+
+  int maiorG =0;
+  
+  const int chipSelect = 10;
+
+//  setupAccelero(accelero);
+//  setupSdCard(sdCard,meuArquivo,chipSelect);
 
   float start, finish, elapsed, elapsedInSec;
-  float velInst;
-  float tamanhoCarro ;
-
-  boolean pegouTamanho = false;
+  float velMed;
+  float distancia = 0;
+  
   boolean started = false;
   boolean finished = false;
+  boolean pegouDistancia = false;
+  boolean impacto = false;
+  
   lcd.clear();
   while (true)
   {
-    if (!pegouTamanho)
+    if (!pegouDistancia)
     {
       lcd.setCursor(0, 0);
-      lcd.print("Qual o tamanho");
+      lcd.print("qual dist em M?");
       lcd.setCursor(0, 1);
-      lcd.print("do carro? ");
-      lcd.print(tamanhoCarro);
-      lcd.print(" m");
+      lcd.print(distancia);
 
-      if (tamanhoCarro > 0.01)
+      if (distancia > 0.1)
       {
         if (pegaInputBotao() == 2)
         {
-          tamanhoCarro = tamanhoCarro - 0.01;
+          distancia = distancia - 0.1;
         }
         else if (pegaInputBotao() == 1)
         {
-          tamanhoCarro = tamanhoCarro + 0.01;
+          distancia = distancia + 0.1;
         }
         else if (pegaInputBotao() == 3)
         {
-          pegouTamanho = true;
+          pegouDistancia = true;
           lcd.clear();
         }
       }
@@ -615,67 +760,112 @@ void velocidadeInst()
       {
         if (pegaInputBotao() == 1)
         {
-          tamanhoCarro = tamanhoCarro + 0.1;
+          distancia = distancia + 0.1;
         }
       }
     }
-    else
-    {
-      if((digitalRead(D2)!=HIGH))
-      {
-        digitalWrite(D2,HIGH);
-      }
+    else{
       if (!started && !finished) {
         lcd.setCursor(0, 0);
-        lcd.print("esperando carro");
+        lcd.print("Aperte Enter ao");
         lcd.setCursor(0, 1);
-        lcd.print("passar P inicial");
-        if(digitalRead(D1)==HIGH)
+        lcd.print("fazer o lancamento");
+        if(pegaInputBotao() == 3)
         {
           started = true;
           start=millis();
           lcd.clear();
+          if(temSd){
+            meuArquivo.println("-----------Novo Lancamento------------");
+          }
         }
       }
       else
       {
         if (started && !finished) {
+
+          x = accelero.getXAccel();
+          y = accelero.getYAccel();
+          z = accelero.getZAccel();
+
+          if(abs(z) > maiorG)
+          {
+            maiorG = z;
+          }
+          
           lcd.setCursor(0, 0);
-          lcd.print("Iniciou!");
+          lcd.print("Maior G: ");
+          lcd.print(maiorG);
           lcd.setCursor(0, 1);
           lcd.print("Tempo:");
           lcd.print((millis() - start)*0.001);
           
-          if(digitalRead(D1)==LOW)
+         
+          if(temSd){
+            meuArquivo.print((millis() - start)*0.001);
+            meuArquivo.print(" ");
+            meuArquivo.print(x);
+            meuArquivo.print(" ");
+            meuArquivo.print(y);
+            meuArquivo.print(" ");
+            meuArquivo.println(z);
+          }
+//           if(((millis() - start)*0.001)>5)
+//          {
+//            finished = true;
+//            finish=millis();
+//            lcd.clear();
+//          }
+          if((abs(z)>150)&&(!impacto))
           {
-            finished = true;
             finish=millis();
-            lcd.clear();
+            elapsed=finish-start;
+            elapsedInSec = elapsed *0.001;
+            velMed = distancia / elapsedInSec;
+            impacto = true;
+          }
+          if(impacto){
+            float finish2,elapsed2,elapsedInSec2;
+            finish2=millis();
+            elapsed2=finish2-finish;
+            elapsedInSec2 = elapsed2 *0.001;
+            if(elapsedInSec2 >2)
+            {
+              finished = true;
+              lcd.clear();
+            }
           }
         }
         else if(started && finished)
         {
-          elapsed=finish-start;
-          elapsedInSec = elapsed *0.001;
-          velInst = tamanhoCarro / elapsedInSec;
+          
           lcd.setCursor(0, 0);
-          lcd.print("Terminou ");
-          lcd.print("T:");
+          lcd.print("Tempo:");
           lcd.print(elapsedInSec);
           lcd.print("s");
           lcd.setCursor(0, 1);
-          lcd.print("Vel Inst:");
-          lcd.print(velInst);
-          lcd.print(" m/s");
+          lcd.print("Vel :");
+          lcd.print(velMed);
+          lcd.print(" m/s ");
+          if(temSd){
+            meuArquivo.print("Tempo queda: ");
+            meuArquivo.print(elapsedInSec);
+             meuArquivo.print(" Altura: ");
+            meuArquivo.print(distancia);
+            meuArquivo.print(" Velocidade: ");
+            meuArquivo.print(velMed);
+            meuArquivo.println(" m/s");
+            meuArquivo.close();
+          }
         }
-
+        
       }
     }
     if (pegaInputBotao() == 4)
     {
-      if (pegouTamanho)
+      if (pegouDistancia)
       {
-        pegouTamanho = false;
+        pegouDistancia = false;
       }
       else {
         break;
@@ -699,9 +889,7 @@ void setup()
   //Creates custom Characters
   lcd.createChar(0, indicador);
   lcd.createChar(1, homeLogo);
-  lcd.createChar(2, inicioLogo);
-  lcd.createChar(3, fimLogo);
-  lcd.begin(screenWidth, screenHeight);
+  lcd.begin(16, 2);
   //Mensagem de incializacao
   //Startup Lettering
   lcd.setCursor(4, 0);
@@ -709,6 +897,9 @@ void setup()
 
 
   delay(2000);
+  setupAccelero();
+  setupSdCard(10);
+  
   lcd.clear();
 }
 
